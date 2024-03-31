@@ -30,10 +30,14 @@ jobs:
         with:
           go-version: '1.21.4'
       - name: build
-        run: docker build -t ga-test .
-      - name: run app
-        run: docker run -p 80:80 -d -it ga-test
+        run: go build -o main ./cmd/app
+      - name: change permissions
+        run: chmod +x main
+      - name: start server
+        run: ./main &
+#      - name: healthcheck
+#        run: timeout 60s sh -c 'until docker ps | grep ga-test | grep -q healthy; do echo "Waiting for container to be healthy..."; sleep 2; done'
       - name: healthcheck
-        run: timeout 60s sh -c 'until docker ps | grep ga-test | grep -q healthy; do echo "Waiting for container to be healthy..."; sleep 2; done'
+        run: timeout 60s sh -c 'while (( curl -s -o /dev/null -w %{http_code} http://localhost:80 != "200")); do echo "Waiting for container to be healthy..."; do sleep 2; done;'
       - name: test
         run: go test -v ./cmd/tests
