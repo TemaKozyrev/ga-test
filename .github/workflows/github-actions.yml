@@ -36,6 +36,7 @@ jobs:
       - name: start server
         run: ./main &
       - name: healthcheck
-        run: timeout 60s sh -c 'while (( "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:80)" != "200" )); do echo "Waiting for container to be healthy..."; sleep 2; done'
+        run: timeout 60s zsh -c 'while (( "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:80)" != "200" )); do echo "Waiting for container to be healthy..."; sleep 2; done'
+        shell: zsh
       - name: test
         run: go test -v ./cmd/tests
