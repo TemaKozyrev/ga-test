@@ -8,7 +8,7 @@ import (
 )
 
 func TestApp(t *testing.T) {
-	e := httpexpect.Default(t, "http://localhost:80")
+	e := httpexpect.Default(t, "http://localhost:3000")
 
 	e.GET("/").
 		Expect().
