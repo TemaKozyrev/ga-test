@@ -8,12 +8,17 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jackc/pgx/v5"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
+	logger := log.New()
+	logger.SetLevel(log.InfoLevel)
+	logger.SetFormatter(&log.TextFormatter{})
+
 	conn, err := pgx.Connect(context.Background(), os.Getenv("postgres://test:test@localhost:5432/test"))
 	if err != nil {
-		os.Exit(1)
+		log.Error(err)
 	}
 	defer conn.Close(context.Background())
 

@@ -6,6 +6,7 @@ require (
 	github.com/gavv/httpexpect/v2 v2.16.0
 	github.com/go-chi/chi/v5 v5.0.12
 	github.com/jackc/pgx/v5 v5.5.5
+	github.com/sirupsen/logrus v1.9.3
 )
 
 require (

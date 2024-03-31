@@ -34,6 +34,6 @@ jobs:
       - name: change permissions
         run: chmod +x main
       - name: start server
-        run: ./main &
+        run: ./main
       - name: test
         run: go test -v ./cmd/tests
