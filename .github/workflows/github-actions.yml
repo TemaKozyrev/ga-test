@@ -32,7 +32,7 @@ jobs:
       - name: build
         run: docker build -t ga-test .
       - name: run app
-        run: docker run -P -d -it ga-test
+        run: docker run -p 80:80 -d -it ga-test
       - name: healthcheck
         run: timeout 60s sh -c 'until docker ps | grep ga-test | grep -q healthy; do echo "Waiting for container to be healthy..."; sleep 2; done'
       - name: test
