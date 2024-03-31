@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"net/http"
-	"os"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -16,7 +15,7 @@ func main() {
 	logger.SetLevel(log.InfoLevel)
 	logger.SetFormatter(&log.TextFormatter{})
 
-	conn, err := pgx.Connect(context.Background(), os.Getenv("postgres://test:test@localhost:5432/test"))
+	conn, err := pgx.Connect(context.Background(), "postgres://test:test@localhost:5432/test")
 	if err != nil {
 		log.Error(err)
 	}
@@ -32,5 +31,5 @@ func main() {
 		}
 	})
 
-	http.ListenAndServe(":3000", r)
+	http.ListenAndServe(":80", r)
 }

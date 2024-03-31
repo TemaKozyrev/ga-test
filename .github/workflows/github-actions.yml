@@ -30,10 +30,10 @@ jobs:
         with:
           go-version: '1.21.4'
       - name: build
-        run: go build -o main ./cmd/app
-      - name: change permissions
-        run: chmod +x main
-      - name: start server
-        run: ./main
+        run: docker build -t ga-test .
+      - name: run app
+        run: docker run -P -d -it ga-test
+      - name: healthcheck
+        run: timeout 60s sh -c 'until docker ps | grep ga-test | grep -q healthy; do echo "Waiting for container to be healthy..."; sleep 2; done'
       - name: test
         run: go test -v ./cmd/tests
