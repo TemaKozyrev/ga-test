@@ -9,19 +9,19 @@ on:
 jobs:
 
   build:
+    environment: test
     runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:11
         env:
-          POSTGRES_USER: test
-          POSTGRES_PASSWORD: test
-          POSTGRES_DB: test
-          POSTGRES_PORT: 5432
+          POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ vars.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+          POSTGRES_PORT: ${{ vars.POSTGRES_PORT }}
         ports:
-          - 5432:5432
+          - ${{ vars.POSTGRES_PORT }}:${{ vars.POSTGRES_PORT }}
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
     steps:
       - uses: actions/checkout@v2
 
@@ -38,7 +38,7 @@ jobs:
       - name: start server
         run: ./main &
       - name: healthcheck
-        run: timeout 60s zsh -c 'while [[ ''$(curl -s -o /dev/null -w ''%{http_code}'' localhost:3000)'' != "200" ]]; do echo "Waiting for container to be healthy..."; sleep 2; done'
+        run: timeout 60s zsh -c 'while [[ ''$(curl -s -o /dev/null -w ''%{http_code}'' localhost:${{ vars.APP_PORT }})'' != "200" ]]; do echo "Waiting for container to be healthy..."; sleep 2; done'
         shell: zsh {0}
       - name: test
         run: go test -v ./cmd/tests
