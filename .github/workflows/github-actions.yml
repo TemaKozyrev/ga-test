@@ -37,8 +37,16 @@ jobs:
         run: chmod +x main
       - name: start server
         run: ./main &
+        env:
+          POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ vars.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+          POSTGRES_PORT: ${{ vars.POSTGRES_PORT }}
+          APP_PORT: ${{ vars.APP_PORT }}
       - name: healthcheck
         run: timeout 60s zsh -c 'while [[ ''$(curl -s -o /dev/null -w ''%{http_code}'' localhost:${{ vars.APP_PORT }})'' != "200" ]]; do echo "Waiting for container to be healthy..."; sleep 2; done'
         shell: zsh {0}
       - name: test
         run: go test -v ./cmd/tests
+        env:
+          APP_PORT: ${{ vars.APP_PORT }}
